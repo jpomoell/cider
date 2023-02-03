@@ -1,0 +1,15 @@
+name: cider
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - numba=0.55
+  - numpy
+  - scipy
+  - matplotlib
+  - notebook
+  - sunpy
+  - astropy
+  - pyevtk
+  
