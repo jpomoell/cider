@@ -8,8 +8,6 @@
 """HMI magnetogram readers
 """
 
-import pypotfield.core.utils as utils
-
 import datetime
 import numpy as np
 import re
@@ -18,7 +16,6 @@ import sunpy
 import sunpy.sun
 import sunpy.map
 
-import astropy
 import astropy.units as units
 
 
@@ -52,7 +49,7 @@ def read_hmi_synoptic(file_name):
 
     date = utils.parse_date_string(meta['T_OBS'])
 
-    print(meta['T_OBS'], date.isoformat())
+    #print(meta['T_OBS'], date.isoformat())
 
     # Timestamp includes milliseconds
     #match = re.match(r"\d{4}.\d{2}.\d{2}_\d{2}:\d{2}:\d{2}\.\d", date_str)
