@@ -8,53 +8,76 @@
 """Magnetogram flux computation
 """
 
+import dataclasses
 import copy
 import numpy as np
 import numba
 
+import astropy.units as u
+import astropy.units.quantity
+
 import cider.utils.map
 
+
+@dataclasses.dataclass
+class FluxContent:
+    
+    signed : astropy.units.quantity.Quantity
+    unsigned : astropy.units.quantity.Quantity
+    area : astropy.units.quantity.Quantity
+
+
 class Flux:
-    
-    def __init__(self, magnetogram):
-        self.compute(magnetogram)
-    
-    def compute(self, magnetogram):
+    """Computes the signed and unsigned fluxes of a magnetogram
+    """
+        
+    @staticmethod
+    def compute(magnetogram):
         
         lon, lat = cider.utils.map.get_lon_lat_coordinates(magnetogram, position="edges")
         
         clt = 90.0-lat
         
+        # 
         radius = magnetogram.rsun_meters.value
         
-        self.signed, self.unsigned, self.area \
+        signed_flux, unsigned_flux, area \
             = cider.magnetogram.flux.signed_unsigned_flux_kernel(magnetogram.data,
                                                                  clt[::-1]*np.pi/180.0,
                                                                  lon*np.pi/180.0,
                                                                  radius)
 
-class Balance:
+        signed_flux *= magnetogram.unit*u.m**2
+        unsigned_flux *= magnetogram.unit*u.m**2
+        area *= u.m*u.m
 
-    def __init__(self):
-        pass
-        
-    def multiplicative(self, magnetogram):
+        return FluxContent(signed_flux, unsigned_flux, area)
+
+
+class Balance:
+    """Balances the signed flux of a magnetogram using a multiplicative method.
+    """
+
+    @staticmethod
+    def multiplicative(magnetogram):
 
         balanced_magnetogram = copy.deepcopy(magnetogram)
         
         lon, lat = cider.utils.map.get_lon_lat_coordinates(magnetogram, position="edges")
         clt = 90.0-lat
 
-        self.flux = lambda m : cider.magnetogram.flux.signed_unsigned_flux_kernel(m,
+        flux_kernel = lambda m : cider.magnetogram.flux.signed_unsigned_flux_kernel(m,
                                                                                   clt[::-1]*np.pi/180.0,
                                                                                   lon*np.pi/180.0,
                                                                                   1.0)[0]
       
-        balanced_magnetogram.data[:, :] = self._multiplicative_kernel(magnetogram.data)[:, :]
+        balanced_magnetogram.data[:, :] \
+            = Balance._multiplicative_kernel(magnetogram.data, flux_kernel)[:, :]
 
         return balanced_magnetogram
 
-    def _multiplicative_kernel(self, Br):
+    @staticmethod
+    def _multiplicative_kernel(Br, flux_kernel):
 
         # Pixels with pos and neg data
         neg_pixels = np.where(Br <= 0.0)
@@ -68,8 +91,8 @@ class Balance:
         BrM[pos_pixels] = 0.0
 
         # Fluxes of negative and positive polarities
-        pos_flux = self.flux(BrP)
-        neg_flux = self.flux(BrM)
+        pos_flux = flux_kernel(BrP)
+        neg_flux = flux_kernel(BrM)
 
         # Constant c chosen to retain the unsigned flux of the origin map
         c = 0.5*(pos_flux - neg_flux)

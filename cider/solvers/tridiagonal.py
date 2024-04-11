@@ -1,16 +1,17 @@
 # This file is part of CIDER.
 #
-# Copyright 2023 CIDER developers
+# Copyright 2024 CIDER developers
 #
 # Use of this source code is governed by a BSD-style license 
 # that can be found in the LICENSE.md file.
 
-"""Tri-diagonal matrix solvers
+"""Tri-diagonal matrix solver
 """
 
 import numpy as np
 
-import pyfishpack.blktri
+import cider.solvers.fishpack.blktri as blktri
+
 
 class BlockTridiagonalSolver:
     def __init__(self):
@@ -28,13 +29,13 @@ class BlockTridiagonalSolver:
         yarr = np.copy(Y, order='F')
     
         ierr1 \
-            = pyfishpack.blktri.blktri(0, \
+            = blktri.blktri(0, \
                                        1, N, AN, BN, CN, \
                                        1, M, AM, BM, CM, \
                                        yarr, w)
     
         ierr2 \
-            = pyfishpack.blktri.blktri(1, \
+            = blktri.blktri(1, \
                                        1, N, AN, BN, CN, \
                                        1, M, AM, BM, CM, \
                                        yarr, w)

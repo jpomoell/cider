@@ -1,0 +1,33 @@
+!    -*- f90 -*-
+
+python module blktri
+    interface
+        subroutine blktri(iflg, NP, N, AN, BN, CN, MP, M, AM, BM, CM, idimY, Y, ierror, w)
+
+            integer::iflg
+
+            integer::NP
+            integer::N
+
+            real*8 dimension(*) :: AN
+            real*8 dimension(*) :: BN
+            real*8 dimension(*) :: CN
+
+            integer::MP
+            integer::M
+
+            real*8 dimension(*) :: AM
+            real*8 dimension(*) :: BM
+            real*8 dimension(*) :: CM
+
+            real*8 dimension(idimY, *), intent(inout) :: Y
+
+            integer, optional, check(shape(Y,0)==idimY), depend(Y) :: idimY=shape(Y,0)
+
+            integer, intent(out) :: ierror
+
+            real*8 dimension(*), intent(inout) :: w
+
+        end subroutine blktri
+    end interface
+end python module blktri

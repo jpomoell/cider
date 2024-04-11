@@ -1,4 +1,20 @@
-# Ignore everything in this directory
-*
-# Exception: this file
-!.gitignore
+# Ignore bytecode files
+*.py[cod]
+
+# Ignore compiled C/C++ code
+*.so
+
+# Ignore data output
+*.vt[ru]
+*.npz
+*.visit
+*.session*
+*.png
+*.npy
+*.fits
+
+# Ignore Jupyter tmp
+.ipynb_checkpoints/
+
+# Ignore macOS Desktop Services files
+.DS_Store
