@@ -34,7 +34,7 @@ class SphericalShellMidPointStreamLineTracer:
     record_points : numba.boolean #= False
 
     # Field line coordinates
-    points : numba.types.List(numba.types.Array(numba.types.float64, 1, "C")) 
+    points : numba.types.ListType(numba.types.Array(numba.types.float64, 1, "C")) 
 
     # Interpolation method
     interpolator : cider.utils.interpolation.NodalSphericalShellVectorFieldInterpolator.class_type.instance_type
@@ -55,7 +55,7 @@ class SphericalShellMidPointStreamLineTracer:
         self.record_points = False
         
         # Initialize point structure
-        self.points = [np.zeros(3)]
+        self.points = numba.typed.List((np.zeros(3),))
         self.points.clear()
 
         # Set the interpolator
