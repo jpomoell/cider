@@ -3,23 +3,7 @@ CIDER: Coronal magnetIc fielD ExtRapolation tools
 
 Tools for extrapolating the solar coronal magnetic field.
 
-
-Limitations and planned work
-----------------------------
-
-CIDER is currently early-level pre-release software, with several improvements to be implemented before release.
-The major current limitation is only supporting uniform grids.
-
-Planned improvements (in approximate order of implementation):
-
-  * Non-uniform radial coordinate in PFSS and MFW models
-  * Implement support for high-resolution extrapolations by adding computations on patches
-  * Use SunPy facilities throughout, in particular coordinates and units 
-  * Rewrite magnetogram loaders so as not to alter metadata directly
-  * Parallel/multithreaded field line tracing
-  * Documentation and more notebook examples
-  * Migrate to a newer FISHPACK version
-  * Easier installation (using meson)
+**NOTE: CIDER is currently early phase software (public alpha). Please stay tuned for updates!**
 
 
 Installation

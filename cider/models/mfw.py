@@ -1,6 +1,6 @@
 # This file is part of CIDER.
 #
-# Copyright 2023 CIDER developers
+# Copyright 2024 CIDER developers
 #
 # Use of this source code is governed by a BSD-style license 
 # that can be found in the LICENSE.md file.
