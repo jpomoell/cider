@@ -3,9 +3,9 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - python>=3.9
+  - python=3.10
   - numba>=0.55
-  - numpy  
+  - numpy=2.0.2
   - scipy
   - matplotlib
   - multimethod
@@ -13,4 +13,7 @@ dependencies:
   - sunpy>=5.1
   - astropy
   - pyevtk
-  
+  - gfortran
+  - pip
+  - pip:
+    - git+https://github.com/pricedj/fishpack
