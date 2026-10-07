@@ -15,6 +15,8 @@ import astropy.coordinates
 import sunpy.map
 
 import cider.solvers.poisson_shell
+import cider.utils.interpolation
+import cider.utils.tracer
 
 
 class PotentialFieldSourceSurfaceModel:
@@ -122,7 +124,7 @@ class PotentialFieldSourceSurfaceModel:
 
         return Bp
 
-    def magnetic_field(self):
+    def magnetic_field(self, colocation="face_staggered"):
         """Returns the magnetic field computed on the mesh
         """
         
@@ -132,7 +134,25 @@ class PotentialFieldSourceSurfaceModel:
         magnetic_field.data[1][:, :, :] = self.Bt()
         magnetic_field.data[2][:, :, :] = self.Bp()
         
-        return magnetic_field
+        if colocation == "nodal":
+            return cider.utils.interpolation.average_face_staggered_to_nodal(magnetic_field)
+        else:
+            return magnetic_field
 
+    def get_field_line_tracer(self, magnetic_field=None):
 
+        if magnetic_field is None:
+            magnetic_field = self.magnetic_field("nodal")
+        
+        # Create the interpolator
+        interpolator = cider.utils.interpolation.NodalSphericalShellVectorFieldInterpolator(magnetic_field)
+        
+        # Create the tracer
+        tracer = cider.utils.tracer.SphericalShellMidPointStreamLineTracer(interpolator)
+        
+        # Set the max path length to be 2 x radial extent
+        tracer.max_path_length = 2.0*np.max(magnetic_field.mesh.extent.r)
+        tracer.record_points = False
+
+        return tracer
 
