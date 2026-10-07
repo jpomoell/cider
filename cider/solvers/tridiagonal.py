@@ -10,7 +10,7 @@
 
 import numpy as np
 
-from fishpack import blktri
+from cider.solvers.fishpack import blktri
 
 
 class BlockTridiagonalSolver:
